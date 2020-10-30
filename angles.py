@@ -72,7 +72,8 @@ class Angle:
     The following is a summary of the major public Angle methods.
         Angle([measure[, mod]]) -- constructor can set the initial measure and
             mod (default 0.0 and 2pi, respectively)
-        convert(new_mod) -- converts the Angle to a different mod and unit
+        convert(new_mod) -- returns the measure of the Angle converted to a
+            different unit
 
     The following operators are defined for Angle objects and perform their
     usual float operations on the Angle's measure, returning a numerical value
@@ -147,8 +148,7 @@ class Angle:
             gradians, gradian, grad, g -- gradians (400)
         """
 
-        # Parse keyword arguments
-        self.measure = float(measure) # current angle measure
+        # Parse unit arguments
         self.mod = 0.0 # full revolution measure
         self.unit = "rad" # name of unit for string output
 
@@ -180,6 +180,9 @@ class Angle:
         elif mod == 400.0:
             self.unit = "grad"
 
+        # Set initial measure
+        self.measure = float(measure) # current angle measure
+
     #-------------------------------------------------------------------------
 
     def __str__(self):
@@ -194,6 +197,32 @@ class Angle:
 
     #-------------------------------------------------------------------------
 
+    @property
+    def measure(self):
+        """Angle.measure() -> float
+        Retrieves normalized angle measure.
+        """
+
+        return self._measure
+
+    #-------------------------------------------------------------------------
+
+    @measure.setter
+    def measure(self, value):
+        """Angle.measure(value) -> None
+        Updates the angle measure, then automatically normalizes.
+
+        Positional arguments:
+        value (float) -- new angle measure
+        """
+
+        # Normalize value to be between (-1/2,1/2] of a full revolution
+        self._measure = ((value + (self.mod/2)) % self.mod) - (self.mod/2)
+        if (self._measure == -self.mod/2):
+            self._measure = -self._measure
+
+    #-------------------------------------------------------------------------
+
     def convert(self, new_mod):
         """Angle.convert(mod) -> float
         Returns the angle measure converted into a different unit.
@@ -202,8 +231,8 @@ class Angle:
         mod (str or float) ["radians"] -- angle unit, or measure of one full
             revolution
 
-        The resulting measure is between 0 and 1 full revolutions (relative to
-        the given unit).
+        The resulting measure is between (-1/2,1/2] full revolutions (relative
+        to the given unit).
         """
 
         # Attempt to parse string mod argument
@@ -223,7 +252,7 @@ class Angle:
             new_mod = abs(float(new_mod))
 
         # Convert measure as a fraction of a complete revolution
-        return ((self.measure/self.mod) % 1.0)*new_mod
+        return ((self._measure/self.mod) % 1.0)*new_mod
 
 #=============================================================================
 
@@ -234,10 +263,11 @@ d = Angle(10, "deg")
 e = Angle(350, "deg")
 f = Angle(0)
 g = Angle(2*math.pi)
-print(-a)
-print(-b)
-print(-c)
-print(-d)
-print(-e)
-print(-f)
-print(-g)
+print(a)
+print(b)
+print(c)
+print(d)
+print(e)
+print(f)
+print(g)
+print(b.convert("rad"))
