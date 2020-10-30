@@ -1,3 +1,5 @@
+"""Defines a lightweight Python Angle class."""
+
 ### Consider redoing the conventions to make all results between -180 and 180.
 ### We might be able to make this work more naturally with negation corresponding to subtraction.
 
@@ -45,6 +47,79 @@ import math
 class Angle:
     """A Python class for representing and performing calculations with
     angles.
+
+    This is a lightweight data structure for representing angles. It is
+    designed to make performing common operations with angles easy, with a
+    focus on applications involving headings in the 2D plane.
+
+    An Angle object has three public attributes:
+        measure (float) -- the numerical measure of the angle, used for most
+            calculations
+        mod (float) -- the measure of one full revolution (e.g. 2pi for
+            radians, 360 for degrees)
+        unit (str) -- string version of the angle's unit
+
+    All Angle measures are normalized to be between -1/2 (exclusive) and 1/2
+    (inclusive) of a full revolution, with negative measures indicating
+    clockwise rotation and positive indicating counterclockwise.
+
+    Binary operations that are defined between Angle objects use the first
+    object's unit. Most (Angle, Angle) binary operators have an equivalent
+    (Angle, float) version that performs the same operation, but treating the
+    given float as the measure of a second angle that matches the first
+    angle's unit.
+
+    The following is a summary of the major public Angle methods.
+        Angle([measure[, mod]]) -- constructor can set the initial measure and
+            mod (default 0.0 and 2pi, respectively)
+        convert(new_mod) -- converts the Angle to a different mod and unit
+
+    The following operators are defined for Angle objects and perform their
+    usual float operations on the Angle's measure, returning a numerical value
+    of the appropriate class.
+        abs(A) (Angle) -- absolute value of measure
+        int(A) (Angle) -- truncates measure to int
+        float(A) (Angle) -- returns measure
+        round(A) (Angle) -- rounds measure to nearest int
+        ceil(A) (Angle) -- integer ceiling of measure
+        floor(A) (Angle) -- integer floor of measure
+        trunc(A) (Angle) -- truncates measure to int
+
+    The following operators are defined for Angle objects, and combine the
+    Angle with either another Angle or a float. In all cases the expected
+    operation is performed on the Angles' measures (as floats), and an Angle
+    object (whose unit matches the first Angle) is returned, normalized to be
+    between -1/2 (exclusive) and 1/2 (inclusive) of a full revolution.
+        -A (Angle) -- negates measure
+        A + B (Angle, Angle) -- adds measures
+        A + b (Angle, float)
+        A += B (Angle, Angle) -- combined addition and assignment
+        A += b (Angle, Angle)
+        A - B (Angle, Angle) -- subtracts measures
+        A - b (Angle, float)
+        A -= B (Angle, Angle) -- combined subtraction and assignment
+        A -= b (Angle, float)
+        A * b (Angle, float) -- multiplies measure by a scalar
+        A *= b (Angle, float) -- combined multiplication and assignment
+        A / b (Angle, float) -- divides measure by a scalar
+        A /= b (Angle, float) -- combined division and assignment
+
+    The following comparison operators are defined for Angle objects, and
+    compare the Angle to either another Angle or a float. In all cases the
+    expected comparison is performed on the Angles' measures (as floats),
+    after both have been converted to the first argument's unit.
+        A > B (Angle, Angle) -- greater than (i.e. more counterclockwise)
+        A > b (Angle, float)
+        A >= B (Angle, Angle) -- greater than or equal to
+        A >= b (Angle, float)
+        A < B (Angle, Angle) -- less than (i.e. more clockwise)
+        A < b (Angle, float)
+        A <= B (Angle, Angle) -- less than or equal to
+        A <= b (Angle, float)
+        A == B (Angle, Angle) -- equal (after conversion to the same unit)
+        A == b (Angle, float)
+        A != B (Angle, Angle) -- not equal
+        A != b (Angle, float)
     """
 
     # Static attributes for accepted unit names
