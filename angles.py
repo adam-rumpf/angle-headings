@@ -102,7 +102,7 @@ class Angle:
     #=========================================================================
 
     def __init__(self, measure=0.0, mod="radians"):
-        """Angle.__init__([measure[, mod]]) -> Angle
+        """Angle([measure[, mod]]) -> Angle
         Angle constructor.
 
         Keyword arguments:
@@ -128,7 +128,7 @@ class Angle:
     #-------------------------------------------------------------------------
 
     def __str__(self):
-        """Angle.__str__() -> str
+        """str(Angle) -> str
         Angle string conversion.
 
         Returns the measure of the angle as a string, along with an
