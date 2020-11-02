@@ -375,6 +375,7 @@ class Angle:
 
     def __add__(self, other):
         """Angle + Angle -> Angle
+        Angle + float -> Angle
         Returns a new Angle with the sum of two angles' measures.
 
         Positional arguments:
@@ -399,6 +400,7 @@ class Angle:
 
     def __sub__(self, other):
         """Angle - Angle -> Angle
+        Angle - float -> Angle
         Returns a new Angle with the difference between two angles' measures.
 
         Positional arguments:
@@ -501,9 +503,162 @@ class Angle:
     # Overloaded Equality Comparisons
     #=========================================================================
 
+    def __eq__(self, other):
+        """Angle == Angle -> bool
+        Angle == float -> bool
+        Determines whether two angles have the same measure.
+
+        Positional arguments:
+        other (Angle or float) -- measure to be compared to this Angle's
+            measure
+
+        This is a method of the operator's first argument. If the second
+        argument is an Angle, it is first converted to this Angle's unit. If
+        the second argument is a float, it is assumed to already match this
+        Angle's unit.
+
+        Note that, since Angle measures are maintained as floats which are
+        occasionally coverted, it is not recommended to use this method to
+        test for measure equality. Instead, Angle.reldiff(Angle) should be
+        used to determine whether the relative difference in the two Angles'
+        measures is sufficiently small.
+        """
+
+        # Find the difference between the Angles
+        delta = float(self - other)
+
+        # Angles equal if difference is zero
+        return delta == 0
+
+    #-------------------------------------------------------------------------
+
+    def __ne__(self, other):
+        """Angle != Angle -> bool
+        Angle != float -> bool
+        Determines whether two angles have the different measures.
+
+        Positional arguments:
+        other (Angle or float) -- measure to be compared to this Angle's
+            measure
+
+        This is a method of the operator's first argument. If the second
+        argument is an Angle, it is first converted to this Angle's unit. If
+        the second argument is a float, it is assumed to already match this
+        Angle's unit.
+
+        Note that, since Angle measures are maintained as floats which are
+        occasionally coverted, it is not recommended to use this method to
+        test for measure equality. Instead, Angle.reldiff(Angle) should be
+        used to determine whether the relative difference in the two Angles'
+        measures is sufficiently small.
+        """
+
+        # Negate equality definition
+        return not (self == other)
+
     #=========================================================================
     # Overloaded Inequality Comparisons
     #=========================================================================
+
+    def __gt__(self, other):
+        """Angle > Angle -> bool
+        Angle > float -> bool
+        Determines the direction of the smallest angle between two Angles.
+
+        Positional arguments:
+        other (Angle or float) -- measure to be compared to this Angle's
+            measure
+
+        This is a method of the operator's first argument. If the second
+        argument is an Angle, it is first converted to this Angle's unit. If
+        the second argument is a float, it is assumed to already match this
+        Angle's unit.
+
+        The return value is based on the smallest angle between A and B, and
+        is True if and only if the smallest angle between them places A
+        counterclockwise relative to B.
+        """
+
+        # Find the difference between the Angles
+        delta = float(self - other)
+
+        # Determine output based on sign of difference
+        return delta > 0
+
+    #-------------------------------------------------------------------------
+
+    def __lt__(self, other):
+        """Angle < Angle -> bool
+        Angle < float -> bool
+        Determines the direction of the smallest angle between two Angles.
+
+        Positional arguments:
+        other (Angle or float) -- measure to be compared to this Angle's
+            measure
+
+        This is a method of the operator's first argument. If the second
+        argument is an Angle, it is first converted to this Angle's unit. If
+        the second argument is a float, it is assumed to already match this
+        Angle's unit.
+
+        The return value is based on the smallest angle between A and B, and
+        is True if and only if the smallest angle between them places A
+        clockwise relative to B.
+        """
+
+        # Find the difference between the Angles
+        delta = float(self - other)
+
+        # Determine output based on sign of difference
+        return delta < 0
+
+    #-------------------------------------------------------------------------
+
+    def __ge__(self, other):
+        """Angle >= Angle -> bool
+        Angle >= float -> bool
+        Determines the direction of the smallest angle between two Angles.
+
+        Positional arguments:
+        other (Angle or float) -- measure to be compared to this Angle's
+            measure
+
+        This is a method of the operator's first argument. If the second
+        argument is an Angle, it is first converted to this Angle's unit. If
+        the second argument is a float, it is assumed to already match this
+        Angle's unit.
+
+        The return value is based on the smallest angle between A and B, and
+        is True if and only if the smallest angle between them places A
+        counterclockwise relative to B (or if the measures are equal).
+        """
+
+        # Combine > operator and == operator
+        return (self == other) or (self > other)
+
+    #-------------------------------------------------------------------------
+
+    def __le__(self, other):
+        """Angle <= Angle -> bool
+        Angle <= float -> bool
+        Determines the direction of the smallest angle between two Angles.
+
+        Positional arguments:
+        other (Angle or float) -- measure to be compared to this Angle's
+            measure
+
+        This is a method of the operator's first argument. If the second
+        argument is an Angle, it is first converted to this Angle's unit. If
+        the second argument is a float, it is assumed to already match this
+        Angle's unit.
+
+        The return value is based on the smallest angle between A and B, and
+        is True if and only if the smallest angle between them places A
+        clockwise relative to B (or if the measures are equal).
+        """
+
+        # Combine < operator and == operator
+        return (self == other) or (self < other)
 
 ##############################################################################
 
@@ -551,4 +706,25 @@ print(a.reldiff(-a))
 print(a.reldiff(a + math.pi))
 print(Angle(90, "d").reldiff(Angle(0, "r")))
 print(Angle(90, "d").reldiff(Angle(math.pi/2, "r")))
-print(Angle(30, "d").reldiff(Angle(-30, "d")))
+print(Angle(30, "d").reldiff(-30))
+print("-"*20)
+print(Angle(1) == Angle(1))
+print(Angle(1) == Angle(2))
+print(Angle(90, "d") == Angle(math.pi/2, "r"))
+print(Angle(1) != Angle(1))
+print(Angle(1) != Angle(2))
+print(Angle(90, "d") != Angle(math.pi/2, "r"))
+print("-"*20)
+print(Angle(2) > Angle(1))
+print(Angle(1) > Angle(2))
+print(Angle(0.5) > Angle(1))
+print(Angle(135, "d") > Angle(215, "d"))
+print(Angle(135, "d") > Angle(-135, "d"))
+print(Angle(-135, "d") > Angle(225, "d"))
+print(Angle(-135, "d") == Angle(225, "d"))
+print(Angle(-135, "d") >= Angle(225, "d"))
+print("-"*20)
+lst = []
+for i in range(170, 191):
+    lst.append((i, Angle(i, "d") > 0))
+print(lst)
