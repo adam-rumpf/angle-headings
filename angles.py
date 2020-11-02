@@ -353,7 +353,7 @@ class Angle:
         Returns an exact copy of this Angle.
 
         The returned Angle has this Angle's mod and measure, automatically
-        normalized to lie within (-1/2,1/2] fullrevolutions.
+        normalized to lie within (-1/2,1/2] full revolutions.
         """
 
         return Angle(self.measure, self.mod)
@@ -518,7 +518,7 @@ class Angle:
         Angle's unit.
 
         Note that, since Angle measures are maintained as floats which are
-        occasionally coverted, it is not recommended to use this method to
+        occasionally converted, it is not recommended to use this method to
         test for measure equality. Instead, Angle.reldiff(Angle) should be
         used to determine whether the relative difference in the two Angles'
         measures is sufficiently small.
@@ -547,7 +547,7 @@ class Angle:
         Angle's unit.
 
         Note that, since Angle measures are maintained as floats which are
-        occasionally coverted, it is not recommended to use this method to
+        occasionally converted, it is not recommended to use this method to
         test for measure equality. Instead, Angle.reldiff(Angle) should be
         used to determine whether the relative difference in the two Angles'
         measures is sufficiently small.
