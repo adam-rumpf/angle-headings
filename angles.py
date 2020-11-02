@@ -1,40 +1,5 @@
 """Defines a lightweight Python Angle class."""
 
-### Consider redoing the conventions to make all results between -180 and 180.
-### We might be able to make this work more naturally with negation corresponding to subtraction.
-
-### Methods to overwrite:
-### __sub__            a - b
-### __floordiv__       a // b
-### __mod__            a % b (have this return the measure modulo any base)
-### (include a method to get or change the attributes)
-### __mul__            a * b
-### __pow__            a ** b
-### __truediv__        a / b
-### __iadd__           a += b
-### __ifloordiv__      a // b
-### __imod__           a %= b (have this update the angle's unit)
-### __imul__           a *= b
-### __ipow__           a **= b
-### __isub__           a -= b
-### __itruediv__       a /= b
-### __lt__             a < b
-### __le__             a <= b
-### __eq__             a == b
-### __ne__             a != b
-### __ge__             a >= b
-### __gt__             a > b
-### __round__          rounds self (may have an optional ndigits keyword argument)
-### __trunc__          truncates self to int
-### __floor__          floor of self
-### __ceil__           ceiling of self
-
-### Note that _normalize can go at the end of some of these (like negation)
-### due to the rules of modular arithmetic.
-
-### Whatever definitions we arrive at, we should try to have the operations satisfy the basic algebraic properties of modular arithmetic.
-### In particular it would be good if addition and subtraction (as well as negation) made sense together, but there is probably no particular need to think very deeply about multiplication and division.
-
 import math
 
 class Angle:
@@ -85,16 +50,12 @@ class Angle:
         -A (Angle) -- negates measure
         A + B (Angle, Angle) -- adds measures
         A + b (Angle, float)
-        A += B (Angle, Angle) -- combined addition and assignment
-        A += b (Angle, Angle)
         A - B (Angle, Angle) -- subtracts measures
         A - b (Angle, float)
-        A -= B (Angle, Angle) -- combined subtraction and assignment
-        A -= b (Angle, float)
         A * b (Angle, float) -- multiplies measure by a scalar
-        A *= b (Angle, float) -- combined multiplication and assignment
         A / b (Angle, float) -- divides measure by a scalar
-        A /= b (Angle, float) -- combined division and assignment
+        A // b (Angle, float) -- floor divides measure by a scalar
+        A ** b (Angle, float) -- raises measure to a scalar power
 
     The following comparison operators are defined for Angle objects, and
     perform the expected comparison with the Angle's measure and another
@@ -216,6 +177,33 @@ class Angle:
             self.unit = "deg"
         elif mod == 400.0:
             self.unit = "grad"
+
+    #-------------------------------------------------------------------------
+
+    def _get_other_measure(self, other):
+        """Angle._get_other_measure(other) -> float
+        Gets a measure argument as a float.
+
+        Positional arguments:
+        other (Angle or float) -- other Angle or float to be treated as a
+            measure
+
+        This is a private method used in some operations that can accept
+        either another Angle object or a float. If given an Angle, this
+        method returns that Angle's measure converted to this Angle's unit.
+        If given a float, it simply returns the float directly.
+        """
+
+        # Determine class of argument
+        if type(other) == Angle:
+            # If another angle, convert the other argument
+            m = other.convert(self.mod)
+        else:
+            # Otherwise attempt to parse second argument as a float
+            m = float(other)
+
+        # Return the float
+        return m
 
     #-------------------------------------------------------------------------
 
@@ -366,27 +354,113 @@ class Angle:
         automatically normalized to lie within (-1/2,1/2] full revolutions.
         """
 
-        # Determine class of second argument
-        if type(other) == Angle:
-            # If another angle, convert the other argument
-            theta = other.convert(self.mod)
-        else:
-            # Otherwise attempt to parse second argument as a float
-            theta = float(other)
+        # Get second argument as a float
+        theta = self._get_other_measure(other)
 
         # Add to this Angle's measure and return result
         return Angle(self.measure + theta, self.mod)
 
-### A += B (Angle, Angle) -- combined addition and assignment
-### A += b (Angle, Angle)
-### A - B (Angle, Angle) -- subtracts measures
-### A - b (Angle, float)
-### A -= B (Angle, Angle) -- combined subtraction and assignment
-### A -= b (Angle, float)
-### A * b (Angle, float) -- multiplies measure by a scalar
-### A *= b (Angle, float) -- combined multiplication and assignment
-### A / b (Angle, float) -- divides measure by a scalar
-### A /= b (Angle, float) -- combined division and assignment
+    #-------------------------------------------------------------------------
+
+    def __sub__(self, other):
+        """Angle - Angle -> Angle
+        Returns a new Angle with the difference between two angles' measures.
+
+        Positional arguments:
+        other (Angle or float) -- measure to be subtracted from this angle's
+            measure
+
+        This is a method of the operator's first argument. If the second
+        argument is an Angle, it is first converted to this Angle's unit. If
+        the second argument is a float, it is assumed to already match this
+        Angle's unit.
+
+        The returned Angle has this Angle's mod, and its measure is
+        automatically normalized to lie within (-1/2,1/2] full revolutions.
+        """
+
+        # Get second argument as a float
+        theta = self._get_other_measure(other)
+
+        # Subtract from this Angle's measure and return result
+        return Angle(self.measure - theta, self.mod)
+
+    #-------------------------------------------------------------------------
+
+    def __mul__(self, other):
+        """Angle * float -> Angle
+        Returns a new Angle with its measure multiplied by a given float.
+
+        Positional arguments:
+        other (float) -- factor by which to multiply this Angle's measure
+
+        This is a method of the operator's first argument. The second argument
+        is a float, it is assumed to already match this Angle's unit.
+
+        The returned Angle has this Angle's mod, and its measure is
+        automatically normalized to lie within (-1/2,1/2] full revolutions.
+        """
+
+        # Multiply this Angle's measure and return result
+        return Angle(self.measure*other, self.mod)
+
+    #-------------------------------------------------------------------------
+
+    def __div__(self, other):
+        """Angle / float -> Angle
+        Returns a new Angle with its measure divided by a given float.
+
+        Positional arguments:
+        other (float) -- factor by which to divide this Angle's measure
+
+        This is a method of the operator's first argument. The second argument
+        is a float, it is assumed to already match this Angle's unit.
+
+        The returned Angle has this Angle's mod, and its measure is
+        automatically normalized to lie within (-1/2,1/2] full revolutions.
+        """
+
+        # Divide this Angle's measure and return result
+        return Angle(self.measure/other, self.mod)
+
+    #-------------------------------------------------------------------------
+
+    def __floordiv__(self, other):
+        """Angle // float -> Angle
+        Returns a new Angle with its measure (floor) divided by a given float.
+
+        Positional arguments:
+        other (float) -- factor by which to (floor) divide this Angle's
+            measure
+
+        This is a method of the operator's first argument. The second argument
+        is a float, it is assumed to already match this Angle's unit.
+
+        The returned Angle has this Angle's mod, and its measure is
+        automatically normalized to lie within (-1/2,1/2] full revolutions.
+        """
+
+        # Floor divide this Angle's measure and return result
+        return Angle(self.measure//other, self.mod)
+
+    #-------------------------------------------------------------------------
+
+    def __pow__(self, other):
+        """Angle ** float -> Angle
+        Returns a new Angle with its measure raised to a given float power.
+
+        Positional arguments:
+        other (float) -- power to which to raise this Angle's measure
+
+        This is a method of the operator's first argument. The second argument
+        is a float, it is assumed to already match this Angle's unit.
+
+        The returned Angle has this Angle's mod, and its measure is
+        automatically normalized to lie within (-1/2,1/2] full revolutions.
+        """
+
+        # Exponentiate this Angle's measure and return result
+        return Angle(self.measure**other, self.mod)
 
     #=========================================================================
     # Overloaded Equality Comparisons
@@ -423,4 +497,15 @@ print("-"*20)
 print(-a)
 print(a+a)
 print(a+b)
-print(Angle(3*math.pi/4) + Angle(math.pi/2))
+print(Angle(135, "d") + Angle(90, "d"))
+print(a)
+a += b
+print(a)
+print(Angle(135, "d") - Angle(90, "d"))
+print(Angle(90, "d") * 2.5)
+# print("-"*20)
+# h = Angle(170, "deg")
+# lst = [h]
+# for i in range(1, 20):
+#     lst.append(lst[i-1] + 1)
+# print([str(a) for a in lst])
