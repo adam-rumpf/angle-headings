@@ -32,6 +32,9 @@ class Angle:
             mod (default 0.0 and 2pi, respectively)
         convert([mod]) -- returns the measure of the Angle converted to a
             different unit
+        reldiff(other) -- computes a normalized relative difference between
+            two Angles' measures, scaled so that equal measures are 0.0 and
+            diametrically opposed measures are 1.0
 
     The following operators are defined for Angle objects, and perform their
     usual float operations on the Angle's measure, returning a numerical value
@@ -60,7 +63,10 @@ class Angle:
     The following comparison operators are defined for Angle objects, and
     perform the expected comparison with the Angle's measure and another
     Angle's measure or a float. Measures are considered to be equal if their
-    normalized values are equal after conversion to a common unit.
+    normalized values are equal after conversion to a common unit. Note that,
+    since measures are maintained as floats which occasionally require
+    normalization, it is not recommended to to directly test equality between
+    two Angles (the Angle.reldiff() method should be used instead).
         A == B (Angle, Angle) -- equal (after conversion to the same unit)
         A == b (Angle, float)
         A != B (Angle, Angle) -- not equal
@@ -170,6 +176,10 @@ class Angle:
             self.mod = abs(float(mod))
             self.unit = "/ " + str(self.mod)
 
+            # Raise a value error in case of zero mod
+            if self.mod == 0.0:
+                raise ValueError("measure of full revolution must be nonzero")
+
         # Rename unit for recognized moduli
         if mod == 2*math.pi:
             self.unit = "rad"
@@ -271,6 +281,31 @@ class Angle:
         # Convert measure as a fraction of a complete revolution
         return ((self._measure/self.mod) % 1.0)*new_mod
 
+    #-------------------------------------------------------------------------
+
+    def reldiff(self, other):
+        """Angle.reldiff(other) -> float
+        Calculates the relative difference between two Angles' measures.
+
+        Positional arguments:
+        other (Angle or float) -- measure to be compared to this Angle's
+            measure
+
+        If the argument is an Angle, it is first converted to this Angle's
+        unit. If the second argument is a float, it is assumed to already
+        match this Angle's unit.
+
+        The returned value is the relative difference between the two
+        measures, scaled so that 0.0 represents equal measures and 1.0
+        represents diametrically opposed measures.
+        """
+
+        # Calculate absolute difference between the measures
+        diff = abs(self - other)
+
+        # Return normalized difference value
+        return diff/(self.mod/2)
+
     #=========================================================================
     # Overloaded Numerical Operators
     #=========================================================================
@@ -343,7 +378,7 @@ class Angle:
         Returns a new Angle with the sum of two angles' measures.
 
         Positional arguments:
-        other (Angle or float) -- measure to be added to this angle's measure
+        other (Angle or float) -- measure to be added to this Angle's measure
 
         This is a method of the operator's first argument. If the second
         argument is an Angle, it is first converted to this Angle's unit. If
@@ -367,7 +402,7 @@ class Angle:
         Returns a new Angle with the difference between two angles' measures.
 
         Positional arguments:
-        other (Angle or float) -- measure to be subtracted from this angle's
+        other (Angle or float) -- measure to be subtracted from this Angle's
             measure
 
         This is a method of the operator's first argument. If the second
@@ -509,3 +544,11 @@ print(Angle(90, "d") * 2.5)
 # for i in range(1, 20):
 #     lst.append(lst[i-1] + 1)
 # print([str(a) for a in lst])
+print("-"*20)
+print(a.reldiff(a))
+print(a.reldiff(b))
+print(a.reldiff(-a))
+print(a.reldiff(a + math.pi))
+print(Angle(90, "d").reldiff(Angle(0, "r")))
+print(Angle(90, "d").reldiff(Angle(math.pi/2, "r")))
+print(Angle(30, "d").reldiff(Angle(-30, "d")))
