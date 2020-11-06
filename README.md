@@ -1,6 +1,6 @@
 # Python Angles
 
-A Python class for representing and performing calculations with angles. Developed for Python 3.8.3.
+A Python class for representing and performing calculations with angles.
 
 This is a small class meant to simplify common operations with angle measures. The convention used for the arithmetic and comparison operations is meant to capture the idea that we are primarily interested in the smallest angle between two measures, regardless of the numbers, themselves. In particular this includes the following conventions:
 
@@ -12,7 +12,9 @@ Radian, degree, and gradian measure (or any arbitrary subdivision of the circle)
 
 ## Dependencies
 
-This class requires the `math` module.
+This class was developed for Python 3.8.3.
+
+It requires the `math` module.
 
 ## The `Angle` Class
 
@@ -38,7 +40,7 @@ The following is a brief description of selected attributes, custom methods, and
   * `measure (float) [0.0]` -- Initial angle measure.
   * `mod (int, float, or str) ["radians"]` -- Specifies measure unit. A numerical argument is treated as the measure of a full revolution, while a string argument is taken as the name of a standard unit (radians, degrees, or gradians).
 * `convert(mod)` -- Returns the angle's measure converted to a different unit.
-* `reldiff(other)` -- Returnes a relative difference between this and another angles' measures, normalized so that 0 represents equality and 1 represents diametrically opposed angles. This is meant to be used as an alternative to direct equality comparisons due to the `float` measures.
+* `reldiff(other)` -- Returns a relative difference between this and another angles' measures, normalized so that 0 represents equality and 1 represents diametrically opposed angles. This is meant to be used as an alternative to direct equality comparisons due to the `float` measures.
 
 ### `float`-Valued Operators
 
@@ -64,7 +66,7 @@ Each of the following operators accepts either another `Angle` object or a `floa
 
 * `A * b` -- Returns an `Angle` object with its measure multiplied by a scalar.
 * `A / b` -- Returns an `Angle` object with its measure divided by a scalar.
-* `A // b` -- Returns an `Angle` objecct with its measure floor divided by a scalar.
+* `A // b` -- Returns an `Angle` object with its measure floor divided by a scalar.
 * `A ** b` -- Returns an `Angle` object with its measure raised to a scalar power.
 
 ### Overloaded Boolean Operators
@@ -80,7 +82,7 @@ Due to the fact that each angle's measure is stored as a `float`, it is not reco
 #### Order Comparisons
 
 The following comparisons are based on the smallest angle between two given measures.
-* `A > B` -- Returns `True` if and only if the smallest angle between `A` and `B` places `A` counterclocwise relative to `B`.
+* `A > B` -- Returns `True` if and only if the smallest angle between `A` and `B` places `A` counterclockwise relative to `B`.
 * `A >= B` -- Returns `True` if and only if `A > B` or `A == B`.
-* `A < B` -- Returns `True` if and only if the smallest angle between `A` and `B` places `A` clocwise relative to `B`.
+* `A < B` -- Returns `True` if and only if the smallest angle between `A` and `B` places `A` clockwise relative to `B`.
 * `A <= B` -- Returns `True` if and only if `A < B` or `A == B`.
