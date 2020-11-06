@@ -1,6 +1,6 @@
 # Python Angles
 
-A Python class for representing and performing calculations with angles.
+A Python class for representing and performing calculations with angles. Developed for Python 3.8.3.
 
 This is a small class meant to simplify common operations with angle measures. The convention used for the arithmetic and comparison operations is meant to capture the idea that we are primarily interested in the smallest angle between two measures, regardless of the numbers, themselves. In particular this includes the following conventions:
 
