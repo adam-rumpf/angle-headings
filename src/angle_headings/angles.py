@@ -1,10 +1,11 @@
-"""Defines a lightweight Python Angle class."""
+"""Defines this package's main Angle class."""
+
+from ._version import __author__, __version__
 
 import math
 
 class Angle:
-    """A Python class for representing and performing calculations with
-    angles.
+    """A class for representing and performing calculations with angles.
 
     This is a lightweight data structure for representing angles. It is
     designed to make performing common operations with angles easy, with a
@@ -26,76 +27,12 @@ class Angle:
     (Angle, float) version that performs the same operation, but treating the
     given float as the measure of a second angle that matches the first
     angle's unit.
-
-    The following is a summary of the major public Angle methods.
-        Angle([measure[, mod]]) -- constructor can set the initial measure and
-            mod (default 0.0 and 2pi, respectively)
-        convert([mod]) -- returns the measure of the Angle converted to a
-            different unit
-        reldiff(other) -- computes a normalized relative difference between
-            two Angles' measures, scaled so that equal measures are 0.0 and
-            diametrically opposed measures are 1.0
-
-    The following operators are defined for Angle objects, and perform their
-    usual float operations on the Angle's measure, returning a numerical value
-    of the appropriate class.
-        abs(A) (Angle) -- absolute value of measure
-        int(A) (Angle) -- truncates measure to int
-        float(A) (Angle) -- returns measure
-        round(A) (Angle) -- rounds measure to nearest int
-
-    The following operators are defined for Angle objects, and combine the
-    Angle with either another Angle or a float. In all cases the expected
-    operation is performed on the Angles' measures (as floats), and a new
-    Angle object (whose unit matches the first Angle) is returned, normalized
-    to be between -1/2 (exclusive) and 1/2 (inclusive) of a full revolution.
-        +A (Angle) -- exact copy of this Angle
-        -A (Angle) -- negates measure
-        A + B (Angle, Angle) -- adds measures
-        A + b (Angle, float)
-        A - B (Angle, Angle) -- subtracts measures
-        A - b (Angle, float)
-        A * b (Angle, float) -- multiplies measure by a scalar
-        A / b (Angle, float) -- divides measure by a scalar
-        A // b (Angle, float) -- floor divides measure by a scalar
-        A ** b (Angle, float) -- raises measure to a scalar power
-
-    The following comparison operators are defined for Angle objects, and
-    perform the expected comparison with the Angle's measure and another
-    Angle's measure or a float. Measures are considered to be equal if their
-    normalized values are equal after conversion to a common unit. Note that,
-    since measures are maintained as floats which occasionally require
-    normalization, it is not recommended to to directly test equality between
-    two Angles (the Angle.reldiff() method should be used instead).
-        A == B (Angle, Angle) -- equal (after conversion to the same unit)
-        A == b (Angle, float)
-        A != B (Angle, Angle) -- not equal
-        A != b (Angle, float)
-
-    The following comparison operators are defined for Angle objects, and
-    compare the Angle to either another Angle or a float. In all cases, the
-    comparison's result is based on the smallest angle between the two
-    arguments. If the smallest angle between A and B places A counterclockwise
-    relative to B, then we say that A > B, and if it places A clockwise
-    relative to B, then we say that A < B. By convention, if A and B are
-    diametrically opposed, we say that we say that A > B if A is the caller
-    and B > A if B is the caller. In all cases the comparison is performed on
-    the Angles' measures (as floats), after both have been converted to the
-    first argument's unit.
-        A > B (Angle, Angle) -- smallest A--B angle is CW
-        A > b (Angle, float)
-        A >= B (Angle, Angle) -- A > B or A == B
-        A >= b (Angle, float)
-        A < B (Angle, Angle) -- smallest A--B angle is CCW
-        A < b (Angle, float)
-        A <= B (Angle, Angle) -- A < B or A == B
-        A <= b (Angle, float)
     """
 
     # Static attributes for accepted unit names
-    rad_str = {"radians", "radian", "rad", "r"}
-    deg_str = {"degrees", "degree", "deg", "d"}
-    grad_str = {"gradians", "gradian", "grad", "g"}
+    _rad_str = {"radians", "radian", "rad", "r"}
+    _deg_str = {"degrees", "degree", "deg", "d"}
+    _grad_str = {"gradians", "gradian", "grad", "g"}
 
     #=========================================================================
     # Technical Methods
@@ -157,15 +94,15 @@ class Angle:
         self.unit = "rad" # name of unit for string output
 
         # Attempt to parse string mod argument
-        if type(mod) == str:
+        if isinstance(mod, str) == True:
             # Search through recognized words
-            if mod in Angle.rad_str:
+            if mod in Angle._rad_str:
                 self.mod = 2*math.pi
                 self.unit = "rad"
-            elif mod in Angle.deg_str:
+            elif mod in Angle._deg_str:
                 self.mod = 360.0
                 self.unit = "deg"
-            elif mod in Angle.grad_str:
+            elif mod in Angle._grad_str:
                 self.mod = 400.0
                 self.unit = "grad"
             else:
@@ -176,9 +113,9 @@ class Angle:
             self.mod = abs(float(mod))
             self.unit = "/ " + str(self.mod)
 
-            # Raise a value error in case of zero mod
-            if self.mod == 0.0:
-                raise ValueError("measure of full revolution must be nonzero")
+            # Raise a value error in case of nonpositive mod
+            if self.mod <= 0.0:
+                raise ValueError("measure of full revolution must be positive")
 
         # Rename unit for recognized moduli
         if mod == 2*math.pi:
@@ -205,7 +142,7 @@ class Angle:
         """
 
         # Determine class of argument
-        if type(other) == Angle:
+        if isinstance(other, Angle) == True:
             # If another angle, convert the other argument
             m = other.convert(self.mod)
         else:
@@ -263,13 +200,13 @@ class Angle:
         """
 
         # Attempt to parse string mod argument
-        if type(new_mod) == str:
+        if isinstance(new_mod, str) == True:
             # Search through recognized words
-            if new_mod in Angle.rad_str:
+            if new_mod in Angle._rad_str:
                 new_mod = 2*math.pi
-            elif new_mod in Angle.deg_str:
+            elif new_mod in Angle._deg_str:
                 new_mod = 360.0
-            elif new_mod in Angle.grad_str:
+            elif new_mod in Angle._grad_str:
                 new_mod = 400.0
             else:
                 # If unrecognized, raise a value error

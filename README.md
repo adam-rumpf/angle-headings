@@ -1,6 +1,8 @@
-# Python Angles
+# Angle Headings
 
-A Python class for representing and performing calculations with angles.
+<a href="https://pypi.org/project/angle-headings"><img src="https://img.shields.io/pypi/v/angle-headings?logo=pypi&logoColor=white"/></a> <a href="https://github.com/adam-rumpf/angle-headings"><img src="https://img.shields.io/github/v/release/adam-rumpf/angle-headings?logo=github"></a> <a href="https://pypi.org/project/angle-headings/#history"><img src="https://img.shields.io/pypi/status/angle-headings"/></a> <a href="https://www.python.org/"><img src="https://img.shields.io/pypi/pyversions/angle-headings?logo=python&logoColor=white"></a> <a href="https://github.com/adam-rumpf/angle-headings/blob/main/LICENSE"><img src="https://img.shields.io/github/license/adam-rumpf/angle-headings"/></a> <a href="https://github.com/adam-rumpf/angle-headings/commits/main"><img src="https://img.shields.io/maintenance/yes/2021"/></a>
+
+A lightweight Python class for representing and performing calculations with angles.
 
 This is a small class meant to simplify common operations with angle measures. The convention used for the arithmetic and comparison operations is meant to capture the idea that we are primarily interested in the smallest angle between two measures, regardless of the numbers, themselves. In particular this includes the following conventions:
 
@@ -10,25 +12,26 @@ This is a small class meant to simplify common operations with angle measures. T
 
 Radian, degree, and gradian measure (or any arbitrary subdivision of the circle) are all supported. Methods perform calculations and return results using the measure of their own angle object, converting other angles or floats when necessary.
 
-## Dependencies
+## Installation and Usage
 
-This class was developed for Python 3.8.3.
+This package can be downloaded from [PyPI](https://pypi.org/project/angle-headings) using the following console command:
+```
+$ pip install angle-headings
+```
 
-It requires the `math` module.
+It can then be imported into a Python program as the `angle_headings` package.
 
-## The `Angle` Class
+Since this package defines only a single class, it is recommended to use
+```python
+from angle_headings import Angle
+```
+to avoid the need for the `angle_headings` prefix.
 
-The following is a brief description of selected attributes, custom methods, and overloaded methods for the `Angle` class.
+## The `angle_headings.Angle` Class
+
+The following is a brief description of selected attributes, custom methods, and overloaded methods for the `angle_headings.Angle` class.
 
 ### Attributes
-
-#### Static Attributes
-
-* `rad_str (set)` -- Set of accepted `str` names for radian measure.
-* `deg_str (set)` -- Set of accepted `str` names for degree measure.
-* `grad_str (set)` -- Set of accepted `str` names for gradian measure.
-
-#### Public Attributes
 
 * `measure (float)` -- Current measure of the angle, always normalized to _±1/2_ full revolutions.
 * `mod (float)` -- Measure of a complete revolution (e.g. _2π_ for radian measure, _360_ for degree measure).
@@ -36,7 +39,7 @@ The following is a brief description of selected attributes, custom methods, and
 
 ### Methods
 
-* `__init__([measure[, mod]])` -- `Angle` class constructor. Accepts the following keyword arguments:
+* `__init__([measure[, mod]])` -- `angle_headings.Angle` class constructor. Accepts the following keyword arguments:
   * `measure (float) [0.0]` -- Initial angle measure.
   * `mod (int, float, or str) ["radians"]` -- Specifies measure unit. A numerical argument is treated as the measure of a full revolution, while a string argument is taken as the name of a standard unit (radians, degrees, or gradians).
 * `convert(mod)` -- Returns the angle's measure converted to a different unit.
@@ -49,29 +52,29 @@ The following is a brief description of selected attributes, custom methods, and
 * `float(A)` -- Returns an angle's measure, cast as a float.
 * `round(A)` -- Returns an angle's measure, rounded to the nearest integer.
 
-### `Angle`-Valued Operators
+### `angle_headings.Angle`-Valued Operators
 
 #### Unary Operators
 
-* `+A` -- Returns an exact copy of the `Angle` object.
-* `-A` -- Returns a copy of the `Angle` object with its measure negated.
+* `+A` -- Returns an exact copy of the `angle_headings.Angle` object.
+* `-A` -- Returns a copy of the `angle_headings.Angle` object with its measure negated.
 
 #### Overloaded Binary Operators
 
-Each of the following operators accepts either another `Angle` object or a `float` as its second argument. If given another `Angle`, the second `Angle` is converted to the first `Angle`'s unit before the operation is performed. If given a `float`, the number is used directly.
-* `A + B` -- Returns an `Angle` object with the sum of two angles' measures.
-* `A - B` -- Returns an `Angle` object with the difference between two angles' measures.
+Each of the following operators accepts either another `angle_headings.Angle` object or a `float` as its second argument. If given another `angle_headings.Angle`, the second `angle_headings.Angle` is converted to the first `angle_headings.Angle`'s unit before the operation is performed. If given a `float`, the number is used directly.
+* `A + B` -- Returns an `angle_headings.Angle` object with the sum of two angles' measures.
+* `A - B` -- Returns an `angle_headings.Angle` object with the difference between two angles' measures.
 
 #### Scalar Operators
 
-* `A * b` -- Returns an `Angle` object with its measure multiplied by a scalar.
-* `A / b` -- Returns an `Angle` object with its measure divided by a scalar.
-* `A // b` -- Returns an `Angle` object with its measure floor divided by a scalar.
-* `A ** b` -- Returns an `Angle` object with its measure raised to a scalar power.
+* `A * b` -- Returns an `angle_headings.Angle` object with its measure multiplied by a scalar.
+* `A / b` -- Returns an `angle_headings.Angle` object with its measure divided by a scalar.
+* `A // b` -- Returns an `angle_headings.Angle` object with its measure floor divided by a scalar.
+* `A ** b` -- Returns an `angle_headings.Angle` object with its measure raised to a scalar power.
 
 ### Overloaded Boolean Operators
 
-Each of the following operators accepts either another `Angle` object or a `float` as its second argument. If given another `Angle`, the second `Angle` is converted to the first `Angle`'s unit before the operation is performed. If given a `float`, the number is used directly.
+Each of the following operators accepts either another `angle_headings.Angle` object or a `float` as its second argument. If given another `angle_headings.Angle`, the second `angle_headings.Angle` is converted to the first `angle_headings.Angle`'s unit before the operation is performed. If given a `float`, the number is used directly.
 
 #### Equality Comparisons
 
