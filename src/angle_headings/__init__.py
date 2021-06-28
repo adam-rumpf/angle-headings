@@ -88,6 +88,4 @@ been converted to the first argument's unit.
 """
 
 from ._version import __author__, __version__
-
-from . import _version
 from .angles import Angle
